@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    image: rfp_up_backend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./backend:/opt/backend
+    image: rfp_up_backend
+    environment:
+      API_KEY: test
+    command: npm run start_dev
+
+
+  api-editor:
+    image: rfp_up_backend:latest
+    environment:
+      - swagger_swagger_editorDir=/opt/backend/node_modules/swagger-editor
+    links:
+      - backend
+    command: npm run start_api_editor
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./backend:/opt/backend
+
+  db:
+    image: postgres:9.5.10
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: rfp
+    ports:
+      - "5432:5432"
+    volumes:
+      # Mount the DB dumps folder into the container, to be able to create & access database dumps:
+      - ./rfp_up_postgres/db/dumps:/db/dumps
+      # Mount out tmp folder, we might want to have access to something there during development:
+      - ./rfp_up_postgres/tmp:/tmp
+      # Mount our 'restoredb' script:
+      - ./rfp_up_postgres/bin/restoredb:/bin/restoredb:ro
+      # Mount our 'dumpdb' script:
+      - ./rfp_up_postgres/bin/dumpdb:/bin/dumpdb:ro
+      # Mount the 'postgres-data' volume into the location Postgres stores it's data:
+      - ./rfp_up_postgres/data:/var/lib/postgresql/data

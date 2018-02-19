@@ -1,0 +1,10 @@
+{
+  "name": "service_api1",
+  "version": "0.0.1",
+  "private": true,
+  "description": "This boilerplate used in development, for swagger editor only",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js"
+}

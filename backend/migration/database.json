@@ -1,0 +1,12 @@
+{
+  "sql-file": true,
+
+  "dev": {
+    "driver": "pg",
+    "user": "",
+    "password": "",
+    "host": "",
+    "database": "rfp",
+    "multipleStatements": true
+  }
+}

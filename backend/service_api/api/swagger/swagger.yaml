@@ -1,0 +1,92 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: RFP Management API
+  description: Authenticate and manage
+  version: "1.0.0"
+# the domain of the service
+#host: total.dev
+# array of all schemes that your API supports
+schemes:
+  - http
+  - https
+# will be prefixed to all paths
+basePath: /api/v1
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  - application/x-www-form-urlencoded
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+tags:
+  - name: Auth
+    description: Operations about auth
+paths:
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# User auth flow paths
+  /hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    get:
+      description: Returns 'Test' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      security:
+        - api_key: []
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+securityDefinitions:
+  api_key:
+    description: Used for non authorized requests
+    type: apiKey
+    name: api_key
+    in: header
+
+definitions:
+  LoginResponse:
+    properties:
+      redirect:
+        type: string
+        description: Location to redirect
+  ImportBody:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ArrayOfStrings'
+      action:
+        type: string
+      meta:
+        type: object
+        required:
+          - date
+        properties:
+          date:
+            type: string
+          time:
+            type: string
+  ArrayOfStrings:
+    type: array
+    items:
+      type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
